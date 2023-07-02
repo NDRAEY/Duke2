@@ -39,7 +39,7 @@ public:
 		uint8_t a;
 	} __attribute__((packed));
 
-	Duke(char* filename) {
+	Duke(const char* filename) {
 		file = fopen(filename, "w+b");
 
 		if(!file) {
@@ -253,10 +253,22 @@ int main(int argc, char** argv) {
 	}
 
 	char* filename = argv[argc - 1];
+	std::string filename_str(filename);
+	std::string out;
 
-	cout << "Input: " << filename << endl;
+	cout << "Input: " << filename_str << endl;
 
-	Duke image((char*)"out.duke");
+	std::size_t dotPos = filename_str.find_last_of('.');
+	
+    if (dotPos != std::string::npos) {
+        out = filename_str.substr(0, dotPos + 1) + "duke";
+    } else {
+	    out = filename_str + ".duke";
+    }
+
+    cout << "Output: " << out << endl;
+
+	Duke image(out.c_str());
 
 	image.from_png(filename);
 
